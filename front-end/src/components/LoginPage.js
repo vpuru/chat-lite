@@ -21,6 +21,7 @@ const LoginPage = () => {
           setResponseMsg(response.data.msg);
         } else {
           console.log(response.data);
+          window.location.replace("http://localhost:3000/dashboard");
         }
       });
 
