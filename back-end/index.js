@@ -10,12 +10,19 @@ const io = socket(server);
 const cors = require("cors");
 app.use(cors());
 
-// our rooms
-const rooms = ["room1", "room2", "room3", "room4"];
+// middleware
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // default route
 app.get("/", (req, res) => {
   res.send("chat lite backend");
+});
+
+app.post("/", (req, res) => {
+  console.log(req.body.username);
+  console.log(req.body.password);
 });
 
 // listen for connections
@@ -24,7 +31,7 @@ io.on("connection", (socket) => {
 
   // join a specific room
   socket.on("join room", (roomName) => {
-    console.log(`Socket ${socket.id} has joined room ${roomName}`);
+    console.log(`socket ${socket.id} has joined room ${roomName}`);
     socket.join(roomName);
   });
 
@@ -36,8 +43,12 @@ io.on("connection", (socket) => {
 
   // leave room
   socket.on("leave room", (roomName) => {
-    console.log(`Socket ${socket.id} has left room ${roomName}`);
+    console.log(`socket ${socket.id} has left room ${roomName}`);
     socket.leave(roomName);
+  });
+
+  socket.on("disconnect", (socket) => {
+    console.log(`socket ${socket.id} has disconnected`);
   });
 });
 

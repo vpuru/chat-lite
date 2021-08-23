@@ -10,21 +10,18 @@ const PORT = 3000;
 const cors = require("cors");
 app.use(cors());
 
-// our users!
-const users = [];
-
-// our messages!
-const messages = {
-  general: [],
-  room1: [],
-  room2: [],
-  room3: [],
-  room4: [],
-};
+// read our body
+app.use(express.bordyParser());
 
 // check if server is running
 app.get("/", (req, res) => {
   res.send("chat lite backend");
+});
+
+// login route
+app.post("/login", (req, res) => {
+  console.log(req.body.username);
+  console.log(req.body.password);
 });
 
 // listen for connections
@@ -58,31 +55,28 @@ io.on("connection", (socket) => {
   });
 
   // send a message
-  socket.on(
-    "send message",
-    (content, recipient, sender, chatName, isChannel) => {
-      // create our payload
-      const payload = {
-        content,
-        chatName,
+  socket.on("send message", (content, recipient, sender, chatName, isChannel) => {
+    // create our payload
+    const payload = {
+      content,
+      chatName,
+      sender,
+    };
+
+    // if we're doing a direct message
+    payload.chatName = sender;
+
+    // emit our event
+    socket.to(recipient).emit("new message", payload);
+
+    // add to our message logs if it's a room
+    if (messages[roomName]) {
+      messages[roomName].push({
         sender,
-      };
-
-      // if we're doing a direct message
-      payload.chatName = sender;
-
-      // emit our event
-      socket.to(recipient).emit("new message", payload);
-
-      // add to our message logs if it's a room
-      if (messages[roomName]) {
-        messages[roomName].push({
-          sender,
-          content,
-        });
-      }
+        content,
+      });
     }
-  );
+  });
 
   // disconnect
   socket.on("disconnect", (socket) => {
