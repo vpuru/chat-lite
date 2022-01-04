@@ -1,6 +1,6 @@
 # Chat-lite
 
-Chat-lite is a browser chat application that utilizes enables user to user communication.
+Chat-lite is a browser chat application that enables user to user communication. Allows for messaging in isolated chat rooms.
 
 
 Used React.js, Express.js, and Socket.io.
