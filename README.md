@@ -5,4 +5,4 @@ Chat-lite is a browser chat application that utilizes enables user to user commu
 
 Used React.js, Express.js, and Socket.io.
 
-Utilized RSA encryption for registration/login. JWT authentication coming soon.
+Utilized RSA encryption for registration/login. JWT session validation coming soon.
